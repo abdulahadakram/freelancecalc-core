@@ -1,0 +1,174 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+    <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
+         data-sidebar-position="fixed" data-header-position="fixed">
+        <div class="position-relative overflow-hidden radial-gradient min-vh-100 d-flex align-items-center justify-content-center">
+            <div class="d-flex align-items-center justify-content-center w-100">
+                <div class="row justify-content-center w-100 px-3">
+                    <div class="col-12 col-md-10 col-lg-8 col-xl-6">
+                        <div class="card mb-0"
+                             style="height: 550px; max-height: 60vh; display: flex; flex-direction: column;">
+                            <div class="card-body d-flex flex-column flex-grow-1">
+                                <form id="survey-form" method="post" action="{% url 'takeSurvey' %}"
+                                      class="w-100 h-100 d-flex flex-column">
+                                    <a href="{% url '' %}" class="text-center">
+                                        <img src="{% static 'assets/images/logos/dark-logo.svg' %}" height="50" alt="">
+                                    </a>
+                                    {% csrf_token %}
+                                    <div id="survey-container"
+                                         class="d-flex flex-column col-md-12 align-items-center justify-content-center flex-grow-1 overflow-auto text-center">
+                                        <!-- Questions will be injected here by JavaScript -->
+                                    </div>
+                                    <div class="d-flex justify-content-between align-items-center w-100">
+                                        <button type="button" id="prev-btn"
+                                                class="btn btn-secondary btn-md btn-sm-lg invisible">Previous
+                                        </button>
+                                        <span id="step-number" class="step-number">1/5</span>
+                                        <button type="button" id="next-btn" class="btn btn-primary btn-md btn-sm-lg" disabled>
+                                            Next
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const steps = [
+                {
+                    id: 'step1',
+                    question: '1. What is your monthly income goal?',
+                    options: [
+                        '$0 - $1,000',
+                        '$1,001 - $5,000',
+                        '$5,001 - $10,000',
+                        '$10,001 - $20,000',
+                        '$20,001 - $50,000',
+                        '$50,001+'
+                    ]
+                },
+                {
+                    id: 'step2',
+                    question: '2. How many projects do you aim to complete each month?',
+                    options: [
+                        '1 - 2',
+                        '3 - 5',
+                        '6 - 10',
+                        '11 - 20',
+                        '21+'
+                    ]
+                },
+                {
+                    id: 'step3',
+                    question: '3. What is your average rate per project?',
+                    options: [
+                        '$0 - $50',
+                        '$51 - $100',
+                        '$101 - $200',
+                        '$201 - $500',
+                        '$500+'
+                    ]
+                },
+                {
+                    id: 'step4',
+                    question: '4. How many hours can you work per week?',
+                    options: [
+                        '0 - 10 hours',
+                        '11 - 20 hours',
+                        '21 - 30 hours',
+                        '31 - 40 hours',
+                        '41 - 60 hours',
+                        '60+ hours'
+                    ]
+                },
+                {
+                    id: 'step5',
+                    question: '5. What is your primary industry or field of work?',
+                    options: [
+                        'Design',
+                        'Development',
+                        'Marketing',
+                        'Writing',
+                        'Consulting',
+                        'Other'
+                    ]
+                }
+            ];
+
+            let currentStep = 0;
+            const selections = {};
+
+            function renderStep(stepIndex) {
+                const step = steps[stepIndex];
+                const container = document.getElementById('survey-container');
+                container.innerHTML = `
+                    <div class="d-flex flex-column align-items-center justify-content-center text-center h-100">
+                        <h5 class="step-heading h5 h6-md">${step.question}</h5>
+                        <div class="mb-3 w-100 d-flex flex-wrap justify-content-center mt-1">
+                            ${step.options.map(option => `
+                                <div class="btn btn-outline-dark m-1 ${selections[step.id] === option ? 'active' : ''}" data-value="${option}">
+                                    ${option}
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+                document.getElementById('step-number').textContent = `${stepIndex + 1}/${steps.length}`;
+                document.getElementById('prev-btn').classList.toggle('invisible', stepIndex === 0);
+                document.getElementById('next-btn').textContent = stepIndex === steps.length - 1 ? 'Submit' : 'Next';
+                document.getElementById('next-btn').disabled = !selections[step.id];
+            }
+
+            document.getElementById('survey-container').addEventListener('click', function (event) {
+                if (event.target.classList.contains('btn-outline-dark')) {
+                    const button = event.target;
+                    const value = button.getAttribute('data-value');
+                    const stepId = steps[currentStep].id;
+
+                    // Update selection
+                    selections[stepId] = value;
+
+                    // Update button styles
+                    document.querySelectorAll(`#survey-container .btn`).forEach(btn => {
+                        btn.classList.toggle('active', btn.getAttribute('data-value') === value);
+                    });
+
+                    // Enable next button if selection is made
+                    document.getElementById('next-btn').disabled = false;
+                }
+            });
+
+            document.getElementById('next-btn').addEventListener('click', function () {
+                if (currentStep < steps.length - 1) {
+                    currentStep++;
+                    renderStep(currentStep);
+                } else {
+                    const form = document.getElementById('survey-form');
+                    for (const stepId in selections) {
+                        const input = document.createElement('input');
+                        input.type = 'hidden';
+                        input.name = stepId;
+                        input.value = selections[stepId];
+                        form.appendChild(input);
+                    }
+                    form.submit();
+                }
+            });
+
+            document.getElementById('prev-btn').addEventListener('click', function () {
+                if (currentStep > 0) {
+                    currentStep--;
+                    renderStep(currentStep);
+                }
+            });
+
+            renderStep(currentStep);
+        });
+    </script>
+{% endblock content %}

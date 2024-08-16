@@ -3,7 +3,7 @@ from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 
-from main.models import User
+from main.models import User, UserOnboardingData
 
 
 @login_required
@@ -11,7 +11,7 @@ def home(request):
     if not request.user.survey_filled:
         return redirect('/takeSurvey')
 
-    return render(request, 'home.html')
+    return render(request, 'dashboard.html')
 
 
 def login_view(request):
@@ -62,4 +62,31 @@ def logout_view(request):
 
 
 def take_survey(request):
-    return None
+    if request.method == 'POST':
+        user = request.user
+
+        income_goal = request.POST.get('step1')
+        projects_per_month = request.POST.get('step2')
+        average_rate = request.POST.get('step3')
+        hours_per_week = request.POST.get('step4')
+        primary_industry = request.POST.get('step5')
+
+        _, created = UserOnboardingData.objects.update_or_create(
+            user=request.user,
+            defaults={
+                'income_goal': income_goal,
+                'projects_per_month': projects_per_month,
+                'average_rate': average_rate,
+                'hours_per_week': hours_per_week,
+                'primary_industry': primary_industry
+            }
+        )
+        user.survey_filled = True
+        user.save()
+        return redirect('/')
+
+    return render(request, 'survey.html')
+
+
+def dashboard(request):
+    return render(request, 'dashboard.html')
