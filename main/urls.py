@@ -21,4 +21,8 @@ from main import views
 urlpatterns = [
     path('', views.home, name=''),
     path('login', views.login_view, name='login'),
+    path('signup', views.signup_view, name='signup'),
+    path('logout', views.logout_view, name='logout'),
+
+    path('takeSurvey', views.take_survey, name='takeSurvey'),
 ]
