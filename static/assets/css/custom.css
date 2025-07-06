@@ -1,0 +1,135 @@
+/* Custom CSS for FreelanceCalc */
+
+/* Fix toast messages z-index */
+.alert {
+    z-index: 9999 !important;
+    position: relative;
+}
+
+/* Ensure toasts appear above login form */
+.page-wrapper .alert {
+    z-index: 10000 !important;
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    left: 20px;
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+/* Fix dropdown menus z-index */
+.dropdown-menu {
+    z-index: 9999 !important;
+}
+
+/* Ensure dropdowns appear above table */
+.table-responsive .dropdown-menu {
+    z-index: 10000 !important;
+    position: absolute !important;
+}
+
+/* Additional styling for better dropdown positioning */
+.table-responsive {
+    position: relative;
+}
+
+.dropdown {
+    position: relative;
+}
+
+/* Ensure proper stacking context */
+.card {
+    position: relative;
+}
+
+.table-responsive {
+    overflow: visible !important;
+}
+
+/* Fix for table overflow issues */
+.table-responsive .table {
+    margin-bottom: 0;
+}
+
+/* Better alert styling */
+.alert-dismissible {
+    position: relative;
+}
+
+.alert-dismissible .btn-close {
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 2;
+    padding: 1.25rem;
+}
+
+/* Ensure alerts are visible on all pages */
+body {
+    position: relative;
+}
+
+/* Fix for login page specifically */
+.min-vh-100 {
+    position: relative;
+}
+
+/* Ensure proper z-index hierarchy */
+.page-wrapper {
+    position: relative;
+    z-index: 1;
+}
+
+.alert {
+    z-index: 9999 !important;
+}
+
+.dropdown-menu {
+    z-index: 9999 !important;
+}
+
+/* Fix for modal z-index if needed */
+.modal {
+    z-index: 10001 !important;
+}
+
+.modal-backdrop {
+    z-index: 10000 !important;
+}
+
+/* Input field padding for login/signup forms */
+.form-control {
+    padding-left: 15px !important;
+}
+
+.input-group .form-control {
+    padding-left: 15px !important;
+}
+
+/* Better input styling */
+.form-control:focus {
+    border-color: #5D87FF;
+    box-shadow: 0 0 0 0.2rem rgba(93, 135, 255, 0.25);
+}
+
+/* Input group styling */
+.input-group-text {
+    border-right: none;
+}
+
+.input-group .form-control {
+    border-left: none;
+}
+
+.input-group .form-control:focus {
+    border-left: none;
+    box-shadow: none;
+}
+
+.input-group:focus-within .input-group-text {
+    border-color: #5D87FF;
+}
+
+.input-group:focus-within .form-control {
+    border-color: #5D87FF;
+} 

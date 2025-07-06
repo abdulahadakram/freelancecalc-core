@@ -1,0 +1,135 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Terms of Service - FreelanceCalc{% endblock %}
+
+{% block content %}
+<div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
+     data-sidebar-position="fixed" data-header-position="fixed">
+    <div class="body-wrapper">
+        <!-- Header Start -->
+        <header class="app-header">
+            <nav class="navbar navbar-expand-lg navbar-light">
+                <ul class="navbar-nav">
+                    <li class="nav-item d-block d-xl-none">
+                        <a class="nav-link sidebartoggler nav-icon-hover" id="headerCollapse"
+                           href="javascript:void(0)">
+                            <i class="ti ti-menu-2"></i>
+                        </a>
+                    </li>
+                </ul>
+                <div class="navbar-collapse justify-content-end px-0" id="navbarNav">
+                    <ul class="navbar-nav flex-row ms-auto align-items-center justify-content-end">
+                        <li class="nav-item">
+                            <a href="{% url 'login' %}" class="btn btn-primary">
+                                <i class="ti ti-arrow-left me-2"></i>Back to Login
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+        <!-- Header End -->
+        
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="page-title-box d-flex align-items-center justify-content-between">
+                        <h4 class="mb-0">Terms of Service</h4>
+                        <div class="page-title-right">
+                            <ol class="breadcrumb m-0">
+                                <li class="breadcrumb-item"><a href="{% url 'login' %}">Login</a></li>
+                                <li class="breadcrumb-item active">Terms of Service</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="text-center mb-4">
+                                <img src="{% static 'assets/images/logos/dark-logo.svg' %}" height="60" alt="FreelanceCalc" class="mb-3">
+                                <h2 class="text-dark mb-2">Terms of Service</h2>
+                                <p class="text-muted">Last updated: {{ "now"|date:"F j, Y" }}</p>
+                            </div>
+
+                            <div class="terms-content">
+                                <h4>1. Acceptance of Terms</h4>
+                                <p>By accessing and using FreelanceCalc ("the Service"), you accept and agree to be bound by the terms and provision of this agreement. If you do not agree to abide by the above, please do not use this service.</p>
+
+                                <h4>2. Description of Service</h4>
+                                <p>FreelanceCalc is an open-source freelance calculator and project management tool designed to help freelancers track their projects, clients, payments, and financial goals. The service provides:</p>
+                                <ul>
+                                    <li>Project and client management</li>
+                                    <li>Payment tracking and invoicing</li>
+                                    <li>Financial goal setting and monitoring</li>
+                                    <li>Revenue analytics and reporting</li>
+                                    <li>Dashboard with visual insights</li>
+                                </ul>
+
+                                <h4>3. Open Source License</h4>
+                                <p>FreelanceCalc is released under the MIT License. This means:</p>
+                                <ul>
+                                    <li>You are free to use, modify, and distribute the software</li>
+                                    <li>You can use it for commercial purposes</li>
+                                    <li>You can modify and distribute the source code</li>
+                                    <li>The original authors are not liable for any damages</li>
+                                </ul>
+
+                                <h4>4. User Accounts</h4>
+                                <p>To use certain features of the Service, you must create an account. You agree to:</p>
+                                <ul>
+                                    <li>Provide accurate and complete information</li>
+                                    <li>Maintain the security of your account credentials</li>
+                                    <li>Accept responsibility for all activities under your account</li>
+                                    <li>Notify us immediately of any unauthorized use</li>
+                                </ul>
+
+                                <h4>5. Acceptable Use</h4>
+                                <p>You agree not to use the Service to:</p>
+                                <ul>
+                                    <li>Violate any applicable laws or regulations</li>
+                                    <li>Infringe on intellectual property rights</li>
+                                    <li>Transmit harmful, offensive, or inappropriate content</li>
+                                    <li>Attempt to gain unauthorized access to the system</li>
+                                    <li>Interfere with the proper functioning of the service</li>
+                                </ul>
+
+                                <h4>6. Data and Privacy</h4>
+                                <p>We respect your privacy and are committed to protecting your data. Please review our <a href="{% url 'privacy' %}" class="text-primary">Privacy Policy</a> for details on how we collect, use, and protect your information.</p>
+
+                                <h4>7. Service Availability</h4>
+                                <p>We strive to maintain high availability of the Service, but we do not guarantee uninterrupted access. The Service may be temporarily unavailable due to maintenance, updates, or technical issues.</p>
+
+                                <h4>8. Limitation of Liability</h4>
+                                <p>FreelanceCalc is provided "as is" without warranties of any kind. We shall not be liable for any indirect, incidental, special, consequential, or punitive damages arising from your use of the Service.</p>
+
+                                <h4>9. Indemnification</h4>
+                                <p>You agree to indemnify and hold harmless FreelanceCalc and its contributors from any claims, damages, or expenses arising from your use of the Service or violation of these terms.</p>
+
+                                <h4>10. Modifications to Terms</h4>
+                                <p>We reserve the right to modify these terms at any time. Changes will be effective immediately upon posting. Your continued use of the Service constitutes acceptance of the modified terms.</p>
+
+                                <h4>11. Termination</h4>
+                                <p>We may terminate or suspend your account at any time for violations of these terms. You may also terminate your account at any time by contacting us.</p>
+
+                                <h4>12. Governing Law</h4>
+                                <p>These terms shall be governed by and construed in accordance with the laws of the jurisdiction where the service is hosted, without regard to conflict of law principles.</p>
+
+                                <h4>13. Contact Information</h4>
+                                <p>If you have any questions about these Terms of Service, please contact us through the project's GitHub repository or email us at support@freelancecalc.com</p>
+
+                                <h4>14. Severability</h4>
+                                <p>If any provision of these terms is found to be unenforceable, the remaining provisions will continue to be valid and enforceable.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

@@ -1,0 +1,24 @@
+{% if current_goal %}
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <h5 class="card-title mb-0">Monthly Goal: {{ current_goal.income_goal|floatformat:0 }} PKR</h5>
+                        <p class="text-muted mb-0">Current Month Progress</p>
+                    </div>
+                    <div class="col-md-4 text-end">
+                        {% widthratio current_month_payments current_goal.income_goal 100 as progress_percentage %}
+                        <div class="progress" style="height: 8px;">
+                            <div class="progress-bar" role="progressbar" style="width: {{ progress_percentage }}%" 
+                                 aria-valuenow="{{ progress_percentage }}" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                        <small class="text-muted">{{ progress_percentage }}% Complete</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %} 

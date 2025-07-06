@@ -1,0 +1,171 @@
+{% extends 'dashboard-base.html' %}
+{% load static %}
+
+{% block title %}Edit Project - Freelance Calculator{% endblock %}
+
+{% block container %}
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h4 class="card-title mb-0">Edit Project</h4>
+                    <a href="{% url 'project_list' %}" class="btn btn-outline-secondary">
+                        <i class="ti ti-arrow-left me-1"></i>Back to Projects
+                    </a>
+                </div>
+                
+                <form method="post" class="needs-validation" novalidate>
+                    {% csrf_token %}
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="name" class="form-label">Project Name *</label>
+                            <input type="text" class="form-control" id="name" name="name" value="{{ project.name }}" required>
+                            <div class="invalid-feedback">
+                                Please provide a project name.
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <label for="client" class="form-label">Client *</label>
+                            <select class="form-select" id="client" name="client" required>
+                                <option value="">Select a client...</option>
+                                {% for client in clients %}
+                                <option value="{{ client.id }}" {% if client.id == project.client.id %}selected{% endif %}>
+                                    {{ client.name }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                            <div class="invalid-feedback">
+                                Please select a client.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="project_type" class="form-label">Project Type *</label>
+                            <select class="form-select" id="project_type" name="project_type" required>
+                                <option value="">Select project type...</option>
+                                <option value="fixed" {% if project.project_type == 'fixed' %}selected{% endif %}>Fixed Price</option>
+                                <option value="hourly" {% if project.project_type == 'hourly' %}selected{% endif %}>Hourly</option>
+                                <option value="retainer" {% if project.project_type == 'retainer' %}selected{% endif %}>Retainer</option>
+                            </select>
+                            <div class="invalid-feedback">
+                                Please select a project type.
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <label for="status" class="form-label">Status *</label>
+                            <select class="form-select" id="status" name="status" required>
+                                <option value="">Select status...</option>
+                                <option value="proposal" {% if project.status == 'proposal' %}selected{% endif %}>Proposal</option>
+                                <option value="in_progress" {% if project.status == 'in_progress' %}selected{% endif %}>In Progress</option>
+                                <option value="completed" {% if project.status == 'completed' %}selected{% endif %}>Completed</option>
+                                <option value="cancelled" {% if project.status == 'cancelled' %}selected{% endif %}>Cancelled</option>
+                            </select>
+                            <div class="invalid-feedback">
+                                Please select a status.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="total_amount" class="form-label">Total Amount (PKR) *</label>
+                            <input type="number" class="form-control" id="total_amount" name="total_amount" min="0" step="0.01" value="{{ project.total_amount }}" required>
+                            <div class="invalid-feedback">
+                                Please provide a valid amount.
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <label for="takeaway_amount" class="form-label">Takeaway Amount (PKR) *</label>
+                            <input type="number" class="form-control" id="takeaway_amount" name="takeaway_amount" min="0" step="0.01" value="{{ project.takeaway_amount }}" required>
+                            <div class="invalid-feedback">
+                                Please provide a valid takeaway amount.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="costs" class="form-label">Costs (PKR)</label>
+                            <input type="number" class="form-control" id="costs" name="costs" min="0" step="0.01" value="{{ project.costs }}">
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <label for="start_date" class="form-label">Start Date *</label>
+                            <input type="date" class="form-control" id="start_date" name="start_date" value="{{ project.start_date|date:'Y-m-d' }}" required>
+                            <div class="invalid-feedback">
+                                Please provide a start date.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="completion_date" class="form-label">Completion Date</label>
+                            <input type="date" class="form-control" id="completion_date" name="completion_date" value="{% if project.completion_date %}{{ project.completion_date|date:'Y-m-d' }}{% endif %}">
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <label for="description" class="form-label">Description</label>
+                            <textarea class="form-control" id="description" name="description" rows="3" placeholder="Project description...">{{ project.description }}</textarea>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-12">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="ti ti-check me-1"></i>Update Project
+                            </button>
+                            <a href="{% url 'project_list' %}" class="btn btn-outline-secondary ms-2">Cancel</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Form validation
+(function() {
+    'use strict';
+    window.addEventListener('load', function() {
+        var forms = document.getElementsByClassName('needs-validation');
+        var validation = Array.prototype.filter.call(forms, function(form) {
+            form.addEventListener('submit', function(event) {
+                if (form.checkValidity() === false) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+            }, false);
+        });
+    }, false);
+})();
+
+// Auto-calculate costs if needed
+document.getElementById('total_amount').addEventListener('input', function() {
+    const total = parseFloat(this.value) || 0;
+    const takeaway = parseFloat(document.getElementById('takeaway_amount').value) || 0;
+    const costs = total - takeaway;
+    if (costs >= 0) {
+        document.getElementById('costs').value = costs.toFixed(2);
+    }
+});
+
+document.getElementById('takeaway_amount').addEventListener('input', function() {
+    const total = parseFloat(document.getElementById('total_amount').value) || 0;
+    const takeaway = parseFloat(this.value) || 0;
+    const costs = total - takeaway;
+    if (costs >= 0) {
+        document.getElementById('costs').value = costs.toFixed(2);
+    }
+});
+</script>
+{% endblock %} 

@@ -1,0 +1,104 @@
+<div class="row">
+    <div class="col-xl-3 col-md-6">
+        <div class="card mini-stats-wid">
+            <div class="card-body">
+                <div class="d-flex">
+                    <div class="flex-grow-1">
+                        <p class="text-muted fw-medium">This Month</p>
+                        <h4 class="mb-0">{{ current_month_payments|floatformat:0 }} PKR</h4>
+                        <p class="text-muted mt-2 mb-0">
+                            <span class="text-{% if payment_percentage >= 0 %}success{% else %}danger{% endif %} me-2">
+                                <i class="ti ti-{% if payment_percentage >= 0 %}trending-up{% else %}trending-down{% endif %}"></i>
+                                {{ payment_percentage }}%
+                            </span>
+                            <span class="text-muted">from last month</span>
+                        </p>
+                    </div>
+                    <div class="flex-shrink-0 align-self-center">
+                        <div class="mini-stat-icon avatar-sm align-self-center">
+                            <span class="avatar-title">
+                                <i class="ti ti-receipt fs-4"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6">
+        <div class="card mini-stats-wid">
+            <div class="card-body">
+                <div class="d-flex">
+                    <div class="flex-grow-1">
+                        <p class="text-muted fw-medium">Total Projects</p>
+                        <h4 class="mb-0">{{ total_projects }}</h4>
+                        <p class="text-muted mt-2 mb-0">
+                            <span class="text-{% if project_percentage >= 0 %}success{% else %}danger{% endif %} me-2">
+                                <i class="ti ti-{% if project_percentage >= 0 %}trending-up{% else %}trending-down{% endif %}"></i>
+                                {{ project_percentage }}%
+                            </span>
+                            <span class="text-muted">from last month</span>
+                        </p>
+                    </div>
+                    <div class="flex-shrink-0 align-self-center">
+                        <div class="mini-stat-icon avatar-sm align-self-center">
+                            <span class="avatar-title">
+                                <i class="ti ti-briefcase fs-4"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6">
+        <div class="card mini-stats-wid">
+            <div class="card-body">
+                <div class="d-flex">
+                    <div class="flex-grow-1">
+                        <p class="text-muted fw-medium">Active Projects</p>
+                        <h4 class="mb-0">{{ active_projects }}</h4>
+                        <p class="text-muted mt-2 mb-0">
+                            <span class="text-primary me-2">
+                                <i class="ti ti-play-circle"></i>
+                                In Progress
+                            </span>
+                        </p>
+                    </div>
+                    <div class="flex-shrink-0 align-self-center">
+                        <div class="mini-stat-icon avatar-sm align-self-center">
+                            <span class="avatar-title">
+                                <i class="ti ti-clock fs-4"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6">
+        <div class="card mini-stats-wid">
+            <div class="card-body">
+                <div class="d-flex">
+                    <div class="flex-grow-1">
+                        <p class="text-muted fw-medium">Completed</p>
+                        <h4 class="mb-0">{{ completed_projects }}</h4>
+                        <p class="text-muted mt-2 mb-0">
+                            <span class="text-success me-2">
+                                <i class="ti ti-check-circle"></i>
+                                Done
+                            </span>
+                        </p>
+                    </div>
+                    <div class="flex-shrink-0 align-self-center">
+                        <div class="mini-stat-icon avatar-sm align-self-center">
+                            <span class="avatar-title">
+                                <i class="ti ti-check fs-4"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> 

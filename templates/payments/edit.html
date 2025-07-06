@@ -1,0 +1,125 @@
+{% extends 'dashboard-base.html' %}
+{% load static %}
+
+{% block title %}Edit Payment - Freelance Calculator{% endblock %}
+
+{% block container %}
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h4 class="card-title mb-0">Edit Payment</h4>
+                    <a href="{% url 'payment_list' %}" class="btn btn-outline-secondary">
+                        <i class="ti ti-arrow-left me-1"></i>Back to Payments
+                    </a>
+                </div>
+                
+                <form method="post" class="needs-validation" novalidate>
+                    {% csrf_token %}
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="project" class="form-label">Project *</label>
+                            <select class="form-select" id="project" name="project" required>
+                                <option value="">Select a project...</option>
+                                {% for project in projects %}
+                                <option value="{{ project.id }}" {% if project.id == payment.project.id %}selected{% endif %}>
+                                    {{ project.name }} - {{ project.client.name }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                            <div class="invalid-feedback">
+                                Please select a project.
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <label for="amount" class="form-label">Amount (PKR) *</label>
+                            <input type="number" class="form-control" id="amount" name="amount" min="0" step="0.01" value="{{ payment.amount }}" required>
+                            <div class="invalid-feedback">
+                                Please provide a valid amount.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="expected_date" class="form-label">Expected Date *</label>
+                            <input type="date" class="form-control" id="expected_date" name="expected_date" value="{{ payment.expected_date|date:'Y-m-d' }}" required>
+                            <div class="invalid-feedback">
+                                Please provide an expected date.
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <label for="actual_date" class="form-label">Actual Date</label>
+                            <input type="date" class="form-control" id="actual_date" name="actual_date" value="{% if payment.actual_date %}{{ payment.actual_date|date:'Y-m-d' }}{% endif %}">
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="status" class="form-label">Status *</label>
+                            <select class="form-select" id="status" name="status" required>
+                                <option value="">Select status...</option>
+                                <option value="pending" {% if payment.status == 'pending' %}selected{% endif %}>Pending</option>
+                                <option value="received" {% if payment.status == 'received' %}selected{% endif %}>Received</option>
+                                <option value="overdue" {% if payment.status == 'overdue' %}selected{% endif %}>Overdue</option>
+                                <option value="cancelled" {% if payment.status == 'cancelled' %}selected{% endif %}>Cancelled</option>
+                            </select>
+                            <div class="invalid-feedback">
+                                Please select a status.
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <label for="notes" class="form-label">Notes</label>
+                            <textarea class="form-control" id="notes" name="notes" rows="3" placeholder="Payment notes...">{{ payment.notes }}</textarea>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-12">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="ti ti-check me-1"></i>Update Payment
+                            </button>
+                            <a href="{% url 'payment_list' %}" class="btn btn-outline-secondary ms-2">Cancel</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Form validation
+(function() {
+    'use strict';
+    window.addEventListener('load', function() {
+        var forms = document.getElementsByClassName('needs-validation');
+        var validation = Array.prototype.filter.call(forms, function(form) {
+            form.addEventListener('submit', function(event) {
+                if (form.checkValidity() === false) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+            }, false);
+        });
+    }, false);
+})();
+
+// Auto-set actual date when status changes to received
+document.getElementById('status').addEventListener('change', function() {
+    const status = this.value;
+    const actualDateField = document.getElementById('actual_date');
+    
+    if (status === 'received' && !actualDateField.value) {
+        const today = new Date().toISOString().split('T')[0];
+        actualDateField.value = today;
+    }
+});
+</script>
+{% endblock %} 

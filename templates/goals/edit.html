@@ -1,0 +1,100 @@
+{% extends 'dashboard-base.html' %}
+{% load static %}
+
+{% block title %}Edit Goal - Freelance Calculator{% endblock %}
+
+{% block container %}
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h4 class="card-title mb-0">Edit Monthly Goal</h4>
+                    <a href="{% url 'goal_list' %}" class="btn btn-outline-secondary">
+                        <i class="ti ti-arrow-left me-1"></i>Back to Goals
+                    </a>
+                </div>
+                
+                <form method="post" class="needs-validation" novalidate>
+                    {% csrf_token %}
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="year" class="form-label">Year *</label>
+                            <select class="form-select" id="year" name="year" required>
+                                <option value="">Select year...</option>
+                                {% for year in year_choices %}
+                                <option value="{{ year }}" {% if year == goal.year %}selected{% endif %}>{{ year }}</option>
+                                {% endfor %}
+                            </select>
+                            <div class="invalid-feedback">
+                                Please select a year.
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <label for="month" class="form-label">Month *</label>
+                            <select class="form-select" id="month" name="month" required>
+                                <option value="">Select month...</option>
+                                <option value="1" {% if goal.month == 1 %}selected{% endif %}>January</option>
+                                <option value="2" {% if goal.month == 2 %}selected{% endif %}>February</option>
+                                <option value="3" {% if goal.month == 3 %}selected{% endif %}>March</option>
+                                <option value="4" {% if goal.month == 4 %}selected{% endif %}>April</option>
+                                <option value="5" {% if goal.month == 5 %}selected{% endif %}>May</option>
+                                <option value="6" {% if goal.month == 6 %}selected{% endif %}>June</option>
+                                <option value="7" {% if goal.month == 7 %}selected{% endif %}>July</option>
+                                <option value="8" {% if goal.month == 8 %}selected{% endif %}>August</option>
+                                <option value="9" {% if goal.month == 9 %}selected{% endif %}>September</option>
+                                <option value="10" {% if goal.month == 10 %}selected{% endif %}>October</option>
+                                <option value="11" {% if goal.month == 11 %}selected{% endif %}>November</option>
+                                <option value="12" {% if goal.month == 12 %}selected{% endif %}>December</option>
+                            </select>
+                            <div class="invalid-feedback">
+                                Please select a month.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="income_goal" class="form-label">Income Goal (PKR) *</label>
+                            <input type="number" class="form-control" id="income_goal" name="income_goal" min="0" step="0.01" value="{{ goal.income_goal }}" required>
+                            <div class="invalid-feedback">
+                                Please provide a valid income goal.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-12">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="ti ti-check me-1"></i>Update Goal
+                            </button>
+                            <a href="{% url 'goal_list' %}" class="btn btn-outline-secondary ms-2">Cancel</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Form validation
+(function() {
+    'use strict';
+    window.addEventListener('load', function() {
+        var forms = document.getElementsByClassName('needs-validation');
+        var validation = Array.prototype.filter.call(forms, function(form) {
+            form.addEventListener('submit', function(event) {
+                if (form.checkValidity() === false) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+            }, false);
+        });
+    }, false);
+})();
+</script>
+{% endblock %} 
