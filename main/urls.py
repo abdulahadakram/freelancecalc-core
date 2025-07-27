@@ -56,6 +56,12 @@ urlpatterns = [
     path('goals/<int:goal_id>/edit/', views.goal_edit, name='goal_edit'),
     path('goals/<int:goal_id>/delete/', views.goal_delete, name='goal_delete'),
     
+    # Expense management
+    path('expenses/', views.expense_list, name='expense_list'),
+    path('expenses/create/', views.expense_create, name='expense_create'),
+    path('expenses/<int:expense_id>/edit/', views.expense_edit, name='expense_edit'),
+    path('expenses/<int:expense_id>/delete/', views.expense_delete, name='expense_delete'),
+    
     # API endpoints
     path('api/payment-pipeline/', views.api_payment_pipeline, name='api_payment_pipeline'),
     path('api/project-stats/', views.api_project_stats, name='api_project_stats'),

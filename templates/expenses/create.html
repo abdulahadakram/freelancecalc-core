@@ -1,0 +1,185 @@
+{% extends 'dashboard-base.html' %}
+{% load static %}
+
+{% block title %}Add Expense - FreelanceCalc{% endblock %}
+
+{% block container %}
+<div class="row">
+    <div class="row">   
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h4 class="card-title mb-0">Add New Expense</h4>
+                        <a href="{% url 'expense_list' %}" class="btn btn-outline-secondary">
+                            <i class="ti ti-arrow-left me-1"></i>Back to Expenses
+                        </a>
+                    </div>
+
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="category" class="form-label">Category *</label>
+                                    <select name="category" id="category" class="form-control" required>
+                                        <option value="">Select Category</option>
+                                        <option value="software">Software & Tools</option>
+                                        <option value="equipment">Equipment</option>
+                                        <option value="travel">Travel & Transportation</option>
+                                        <option value="marketing">Marketing & Advertising</option>
+                                        <option value="office">Office & Supplies</option>
+                                        <option value="professional">Professional Development</option>
+                                        <option value="insurance">Insurance & Legal</option>
+                                        <option value="salary">Salary</option>
+                                        <option value="miscellaneous">Miscellaneous</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="amount" class="form-label">Amount (PKR) *</label>
+                                    <input type="number" name="amount" id="amount" class="form-control" step="0.01" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="description" class="form-label">Description *</label>
+                                    <input type="text" name="description" id="description" class="form-control" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="date" class="form-label">Date *</label>
+                                    <input type="date" name="date" id="date" class="form-control" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="payment_method" class="form-label">Payment Method *</label>
+                                    <select name="payment_method" id="payment_method" class="form-control" required>
+                                        <option value="">Select Payment Method</option>
+                                        <option value="cash">Cash</option>
+                                        <option value="bank">Bank Transfer</option>
+                                        <option value="credit_card">Credit Card</option>
+                                        <option value="debit_card">Debit Card</option>
+                                        <option value="other">Other</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="employee_name" class="form-label">Employee Name</label>
+                                    <input type="text" name="employee_name" id="employee_name" class="form-control">
+                                    <small class="text-muted">Leave blank if not applicable</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="receipt" class="form-label">Receipt</label>
+                                    <input type="file" name="receipt" id="receipt" class="form-control" accept="image/*,.pdf">
+                                    <small class="text-muted">Upload receipt image or PDF (max 5MB)</small>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="notes" class="form-label">Notes</label>
+                                    <textarea name="notes" id="notes" class="form-control" rows="3"></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <div class="form-check">
+                                        <input type="checkbox" name="tax_deductible" id="tax_deductible" class="form-check-input" checked>
+                                        <label class="form-check-label" for="tax_deductible">
+                                            Tax Deductible
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <div class="form-check">
+                                        <input type="checkbox" name="is_recurring" id="is_recurring" class="form-check-input">
+                                        <label class="form-check-label" for="is_recurring">
+                                            Recurring Expense
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row recurring-fields" style="display: none;">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="recurring_pattern" class="form-label">Recurring Pattern</label>
+                                    <select name="recurring_pattern" id="recurring_pattern" class="form-control">
+                                        <option value="">Select Pattern</option>
+                                        <option value="monthly">Monthly</option>
+                                        <option value="quarterly">Quarterly</option>
+                                        <option value="yearly">Yearly</option>
+                                        <option value="custom">Custom</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="recurring_end_date" class="form-label">End Date</label>
+                                    <input type="date" name="recurring_end_date" id="recurring_end_date" class="form-control">
+                                    <small class="text-muted">Leave blank for indefinite</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mt-3">
+                            <div class="col-12">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="ti ti-plus me-1"></i>Add Expense
+                                </button>
+                                <a href="{% url 'expense_list' %}" class="btn btn-outline-secondary ms-2">Cancel</a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block script %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Set default date to today
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('date').value = today;
+    
+    const isRecurringCheckbox = document.getElementById('is_recurring');
+    const recurringFields = document.querySelector('.recurring-fields');
+    
+    function toggleRecurringFields() {
+        if (isRecurringCheckbox.checked) {
+            recurringFields.style.display = 'block';
+        } else {
+            recurringFields.style.display = 'none';
+        }
+    }
+    
+    isRecurringCheckbox.addEventListener('change', toggleRecurringFields);
+    toggleRecurringFields(); // Initial state
+});
+</script>
+{% endblock %} 

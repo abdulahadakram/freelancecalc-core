@@ -101,4 +101,53 @@
             </div>
         </div>
     </div>
+    
+    <div class="col-xl-6">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="card-title mb-0">This Month Expenses</h5>
+                    <a href="{% url 'expense_list' %}" class="text-primary text-decoration-none">
+                        View All Expenses
+                    </a>
+                </div>
+                <div class="d-flex align-items-center">
+                    <div class="flex-grow-1">
+                        <h3 class="mb-0 text-danger">{{ current_month_expenses|floatformat:0 }} PKR</h3>
+                        <p class="text-muted mb-0">Total expenses this month</p>
+                    </div>
+                    <div class="flex-shrink-0">
+                        <i class="ti ti-receipt-off fs-2 text-danger"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-6">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="card-title mb-0">Top Expense Categories</h5>
+                    <a href="{% url 'expense_create' %}" class="text-primary text-decoration-none">
+                        Add Expense
+                    </a>
+                </div>
+                {% if top_expense_categories %}
+                    <div class="expense-categories">
+                        {% for category in top_expense_categories %}
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="text-muted">{{ category.category|title }}</span>
+                            <span class="fw-semibold">{{ category.total|floatformat:0 }} PKR</span>
+                        </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="text-center text-muted">
+                        <i class="ti ti-receipt-off fs-3 mb-2"></i>
+                        <p class="mb-0">No expenses this month</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
 </div> 

@@ -232,11 +232,13 @@ class DashboardCharts {
         const growthData = window.revenueGrowthData || {
             labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
             actual: [0, 0, 0, 0, 0, 0],
+            expenses: [0, 0, 0, 0, 0, 0],
+            netProfit: [0, 0, 0, 0, 0, 0],
             target: [0, 0, 0, 0, 0, 0]
         };
 
         // Validate data structure
-        if (!growthData.labels || !growthData.actual || !growthData.target) {
+        if (!growthData.labels || !growthData.actual || !growthData.expenses || !growthData.netProfit || !growthData.target) {
             console.error('Invalid revenue growth data structure:', growthData);
             return;
         }
@@ -244,16 +246,28 @@ class DashboardCharts {
         const growthOptions = {
             series: [
                 {
-                    name: 'Actual Revenue',
-                    data: growthData.actual
+                    name: 'Revenue',
+                    data: growthData.actual,
+                    type: 'column'
                 },
                 {
-                    name: 'Target Revenue',
-                    data: growthData.target
+                    name: 'Expenses',
+                    data: growthData.expenses,
+                    type: 'column'
+                },
+                {
+                    name: 'Net Profit',
+                    data: growthData.netProfit,
+                    type: 'line'
+                },
+                {
+                    name: 'Target',
+                    data: growthData.target,
+                    type: 'line'
                 }
             ],
             chart: {
-                type: 'bar',
+                type: 'line',
                 height: 350,
                 stacked: false,
                 toolbar: {
@@ -262,11 +276,11 @@ class DashboardCharts {
                 foreColor: '#adb0bb',
                 fontFamily: 'inherit'
             },
-            colors: ['#5D87FF', '#FFA726'],
+            colors: ['#5D87FF', '#FF6B6B', '#66BB6A', '#FFA726'],
             plotOptions: {
                 bar: {
                     horizontal: false,
-                    columnWidth: '55%',
+                    columnWidth: '40%',
                     borderRadius: 4
                 }
             },
@@ -274,9 +288,8 @@ class DashboardCharts {
                 enabled: false
             },
             stroke: {
-                show: true,
-                width: 2,
-                colors: ['transparent']
+                width: [0, 0, 3, 3],
+                curve: 'smooth'
             },
             xaxis: {
                 categories: growthData.labels,
@@ -288,7 +301,7 @@ class DashboardCharts {
             },
             yaxis: {
                 title: {
-                    text: 'Revenue (PKR)'
+                    text: 'Amount (PKR)'
                 },
                 labels: {
                     style: {
@@ -300,7 +313,15 @@ class DashboardCharts {
                 }
             },
             fill: {
-                opacity: 1
+                opacity: [1, 1, 1, 1],
+                gradient: {
+                    inverseColors: false,
+                    shade: 'light',
+                    type: 'vertical',
+                    opacityFrom: 0.85,
+                    opacityTo: 0.55,
+                    stops: [0, 100, 100, 100]
+                }
             },
             tooltip: {
                 theme: 'dark',

@@ -49,6 +49,8 @@
     window.revenueGrowthData = {
         labels: [{% for item in revenue_growth_data %}'{{ item.month }}'{% if not forloop.last %}, {% endif %}{% endfor %}],
         actual: [{% for item in revenue_growth_data %}{{ item.actual }}{% if not forloop.last %}, {% endif %}{% endfor %}],
+        expenses: [{% for item in revenue_growth_data %}{{ item.expenses }}{% if not forloop.last %}, {% endif %}{% endfor %}],
+        netProfit: [{% for item in revenue_growth_data %}{{ item.net_profit }}{% if not forloop.last %}, {% endif %}{% endfor %}],
         target: [{% for item in revenue_growth_data %}{{ item.target }}{% if not forloop.last %}, {% endif %}{% endfor %}]
     };
 </script>

@@ -1,0 +1,106 @@
+{% extends 'dashboard-base.html' %}
+{% load static %}
+
+{% block title %}Expenses - Freelance Calculator{% endblock %}
+
+{% block container %}
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h4 class="card-title mb-0">All Expenses</h4>
+                        <a href="{% url 'expense_create' %}" class="btn btn-primary">
+                            <i class="ti ti-plus me-1"></i>Add Expense
+                        </a>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="table table-centered table-nowrap mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Description</th>
+                                    <th>Category</th>
+                                    <th>Amount</th>
+                                    <th>Date</th>
+                                    <th>Payment Method</th>
+                                    <th>Tax Deductible</th>
+                                    <th>Recurring</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for expense in expenses %}
+                                <tr>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <div class="flex-grow-1">
+                                                <h6 class="mb-0">{{ expense.description }}</h6>
+                                                {% if expense.employee_name %}
+                                                <small class="text-muted">Employee: {{ expense.employee_name }}</small>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-light text-dark">{{ expense.get_category_display }}</span>
+                                    </td>
+                                    <td>
+                                        <span class="text-danger fw-semibold">{{ expense.amount }} PKR</span>
+                                    </td>
+                                    <td>{{ expense.date|date:"M d, Y" }}</td>
+                                    <td>{{ expense.get_payment_method_display }}</td>
+                                    <td>
+                                        {% if expense.tax_deductible %}
+                                        <span class="badge bg-success">Yes</span>
+                                        {% else %}
+                                        <span class="badge bg-secondary">No</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if expense.is_recurring %}
+                                        <span class="badge bg-info">{{ expense.get_recurring_pattern_display }}</span>
+                                        {% else %}
+                                        <span class="badge bg-light text-dark">One-time</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <div class="dropdown">
+                                            <button class="btn btn-sm btn-light dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                                <i class="ti ti-dots-vertical"></i>
+                                            </button>
+                                            <ul class="dropdown-menu">
+                                                <li><a class="dropdown-item" href="{% url 'expense_edit' expense.pk %}">
+                                                    <i class="ti ti-edit me-2"></i>Edit
+                                                </a></li>
+                                                <li><a class="dropdown-item text-danger" href="{% url 'expense_delete' expense.pk %}">
+                                                    <i class="ti ti-trash me-2"></i>Delete
+                                                </a></li>
+                                            </ul>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="8" class="text-center py-4">
+                                        
+                                        <div class="text-muted">
+                                            <i class="ti ti-receipt-off fs-1 mb-3 d-block"></i>
+                                            <h5>No expenses found</h5>
+                                            <p>Start tracking your business expenses to get better insights.</p>
+                                            <a href="{% url 'expense_create' %}" class="btn btn-primary">
+                                                <i class="ti ti-plus"></i> Add Your First Expense
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 
