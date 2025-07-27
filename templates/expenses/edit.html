@@ -1,0 +1,189 @@
+{% extends 'dashboard-base.html' %}
+{% load static %}
+
+{% block title %}Edit Expense - FreelanceCalc{% endblock %}
+
+{% block container %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="page-title-box">
+                <div class="page-title-right">
+                    <ol class="breadcrumb m-0">
+                        <li class="breadcrumb-item"><a href="{% url 'expense_list' %}">Expenses</a></li>
+                        <li class="breadcrumb-item active">Edit Expense</li>
+                    </ol>
+                </div>
+                <h4 class="page-title">Edit Expense</h4>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="category" class="form-label">Category *</label>
+                                    <select name="category" id="category" class="form-control" required>
+                                        <option value="">Select Category</option>
+                                        <option value="software" {% if expense.category == 'software' %}selected{% endif %}>Software & Tools</option>
+                                        <option value="equipment" {% if expense.category == 'equipment' %}selected{% endif %}>Equipment</option>
+                                        <option value="travel" {% if expense.category == 'travel' %}selected{% endif %}>Travel & Transportation</option>
+                                        <option value="marketing" {% if expense.category == 'marketing' %}selected{% endif %}>Marketing & Advertising</option>
+                                        <option value="office" {% if expense.category == 'office' %}selected{% endif %}>Office & Supplies</option>
+                                        <option value="professional" {% if expense.category == 'professional' %}selected{% endif %}>Professional Development</option>
+                                        <option value="insurance" {% if expense.category == 'insurance' %}selected{% endif %}>Insurance & Legal</option>
+                                        <option value="salary" {% if expense.category == 'salary' %}selected{% endif %}>Salary</option>
+                                        <option value="miscellaneous" {% if expense.category == 'miscellaneous' %}selected{% endif %}>Miscellaneous</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="amount" class="form-label">Amount (PKR) *</label>
+                                    <input type="number" name="amount" id="amount" class="form-control" step="0.01" value="{{ expense.amount }}" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="description" class="form-label">Description *</label>
+                                    <input type="text" name="description" id="description" class="form-control" value="{{ expense.description }}" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="date" class="form-label">Date *</label>
+                                    <input type="date" name="date" id="date" class="form-control" value="{{ expense.date|date:'Y-m-d' }}" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="payment_method" class="form-label">Payment Method *</label>
+                                    <select name="payment_method" id="payment_method" class="form-control" required>
+                                        <option value="">Select Payment Method</option>
+                                        <option value="cash" {% if expense.payment_method == 'cash' %}selected{% endif %}>Cash</option>
+                                        <option value="bank" {% if expense.payment_method == 'bank' %}selected{% endif %}>Bank Transfer</option>
+                                        <option value="credit_card" {% if expense.payment_method == 'credit_card' %}selected{% endif %}>Credit Card</option>
+                                        <option value="debit_card" {% if expense.payment_method == 'debit_card' %}selected{% endif %}>Debit Card</option>
+                                        <option value="other" {% if expense.payment_method == 'other' %}selected{% endif %}>Other</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="employee_name" class="form-label">Employee Name</label>
+                                    <input type="text" name="employee_name" id="employee_name" class="form-control" value="{{ expense.employee_name|default:'' }}">
+                                    <small class="text-muted">Leave blank if not applicable</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="receipt" class="form-label">Receipt</label>
+                                    <input type="file" name="receipt" id="receipt" class="form-control" accept="image/*,.pdf">
+                                    <small class="text-muted">Upload receipt image or PDF (max 5MB)</small>
+                                    {% if expense.receipt %}
+                                    <div class="mt-2">
+                                        <small class="text-muted">Current receipt: {{ expense.receipt.name }}</small>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="notes" class="form-label">Notes</label>
+                                    <textarea name="notes" id="notes" class="form-control" rows="3">{{ expense.notes|default:'' }}</textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <div class="form-check">
+                                        <input type="checkbox" name="tax_deductible" id="tax_deductible" class="form-check-input" {% if expense.tax_deductible %}checked{% endif %}>
+                                        <label class="form-check-label" for="tax_deductible">
+                                            Tax Deductible
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <div class="form-check">
+                                        <input type="checkbox" name="is_recurring" id="is_recurring" class="form-check-input" {% if expense.is_recurring %}checked{% endif %}>
+                                        <label class="form-check-label" for="is_recurring">
+                                            Recurring Expense
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row recurring-fields" style="display: none;">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="recurring_pattern" class="form-label">Recurring Pattern</label>
+                                    <select name="recurring_pattern" id="recurring_pattern" class="form-control">
+                                        <option value="">Select Pattern</option>
+                                        <option value="monthly" {% if expense.recurring_pattern == 'monthly' %}selected{% endif %}>Monthly</option>
+                                        <option value="quarterly" {% if expense.recurring_pattern == 'quarterly' %}selected{% endif %}>Quarterly</option>
+                                        <option value="yearly" {% if expense.recurring_pattern == 'yearly' %}selected{% endif %}>Yearly</option>
+                                        <option value="custom" {% if expense.recurring_pattern == 'custom' %}selected{% endif %}>Custom</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="recurring_end_date" class="form-label">End Date</label>
+                                    <input type="date" name="recurring_end_date" id="recurring_end_date" class="form-control" value="{{ expense.recurring_end_date|date:'Y-m-d'|default:'' }}">
+                                    <small class="text-muted">Leave blank for indefinite</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="text-end">
+                            <a href="{% url 'expense_list' %}" class="btn btn-secondary me-2">Cancel</a>
+                            <button type="submit" class="btn btn-primary">Update Expense</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block script %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const isRecurringCheckbox = document.getElementById('is_recurring');
+    const recurringFields = document.querySelector('.recurring-fields');
+    
+    function toggleRecurringFields() {
+        if (isRecurringCheckbox.checked) {
+            recurringFields.style.display = 'block';
+        } else {
+            recurringFields.style.display = 'none';
+        }
+    }
+    
+    isRecurringCheckbox.addEventListener('change', toggleRecurringFields);
+    toggleRecurringFields(); // Initial state
+});
+</script>
+{% endblock %} 

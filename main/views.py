@@ -8,7 +8,7 @@ from django.utils import timezone
 from datetime import datetime, date
 from decimal import Decimal
 
-from main.models import User, Client, Project, Payment, MonthlyGoal
+from main.models import User, Client, Project, Payment, MonthlyGoal, Expense
 
 
 @login_required
@@ -78,6 +78,20 @@ def dashboard(request):
         actual_date__month=current_month,
         status='received'
     ).aggregate(total=Sum('amount'))['total'] or Decimal('0')
+    
+    # Get current month's expenses
+    current_month_expenses = Expense.objects.filter(
+        user=request.user,
+        date__year=current_year,
+        date__month=current_month
+    ).aggregate(total=Sum('amount'))['total'] or Decimal('0')
+    
+    # Get top expense categories for current month
+    top_expense_categories = Expense.objects.filter(
+        user=request.user,
+        date__year=current_year,
+        date__month=current_month
+    ).values('category').annotate(total=Sum('amount')).order_by('-total')[:5]
     
     # Get last month's payments for comparison
     last_month = current_month - 1 if current_month > 1 else 12
@@ -187,6 +201,16 @@ def dashboard(request):
             status='received'
         ).aggregate(total=Sum('amount'))['total'] or Decimal('0')
         
+        # Actual expenses
+        actual_expenses = Expense.objects.filter(
+            user=request.user,
+            date__year=month_date.year,
+            date__month=month_date.month
+        ).aggregate(total=Sum('amount'))['total'] or Decimal('0')
+        
+        # Net profit (revenue - expenses)
+        net_profit = actual_revenue - actual_expenses
+        
         # Monthly goal (if exists)
         try:
             monthly_goal = MonthlyGoal.objects.get(
@@ -206,6 +230,8 @@ def dashboard(request):
         revenue_growth_data.append({
             'month': month_date.strftime('%b %Y'),
             'actual': float(actual_revenue),
+            'expenses': float(actual_expenses),
+            'net_profit': float(net_profit),
             'target': float(target_revenue)
         })
     
@@ -214,6 +240,8 @@ def dashboard(request):
     context = {
         'current_goal': current_goal,
         'current_month_payments': current_month_payments,
+        'current_month_expenses': current_month_expenses,
+        'top_expense_categories': top_expense_categories,
         'pending_payments': pending_payments,
         'overdue_payments': overdue_payments,
         'upcoming_payments': upcoming_payments,
@@ -431,9 +459,6 @@ def payment_delete(request, payment_id):
     return redirect('payment_list')
 
 
-
-
-
 # Monthly Goals Views
 @login_required
 def goal_list(request):
@@ -503,6 +528,85 @@ def goal_delete(request, goal_id):
     goal.delete()
     messages.success(request, f'Goal for {goal.month}/{goal.year} deleted successfully.')
     return redirect('goal_list')
+
+
+# Expense Management Views
+@login_required
+def expense_list(request):
+    expenses = Expense.objects.filter(user=request.user)
+    return render(request, 'expenses/list.html', {'expenses': expenses})
+
+
+@login_required
+def expense_create(request):
+    if request.method == 'POST':
+        category = request.POST.get('category')
+        description = request.POST.get('description')
+        amount = request.POST.get('amount')
+        date = request.POST.get('date')
+        payment_method = request.POST.get('payment_method')
+        receipt = request.FILES.get('receipt')
+        tax_deductible = request.POST.get('tax_deductible') == 'on'
+        is_recurring = request.POST.get('is_recurring') == 'on'
+        recurring_pattern = request.POST.get('recurring_pattern') if is_recurring else None
+        recurring_end_date = request.POST.get('recurring_end_date') if is_recurring and request.POST.get('recurring_end_date') else None
+        employee_name = request.POST.get('employee_name')
+        notes = request.POST.get('notes')
+        
+        expense = Expense.objects.create(
+            user=request.user,
+            category=category,
+            description=description,
+            amount=amount,
+            date=date,
+            payment_method=payment_method,
+            receipt=receipt,
+            tax_deductible=tax_deductible,
+            is_recurring=is_recurring,
+            recurring_pattern=recurring_pattern,
+            recurring_end_date=recurring_end_date,
+            employee_name=employee_name,
+            notes=notes
+        )
+        messages.success(request, 'Expense created successfully!')
+        return redirect('expense_list')
+    
+    return render(request, 'expenses/create.html')
+
+
+@login_required
+def expense_edit(request, expense_id):
+    expense = get_object_or_404(Expense, id=expense_id, user=request.user)
+    if request.method == 'POST':
+        expense.category = request.POST.get('category')
+        expense.description = request.POST.get('description')
+        expense.amount = request.POST.get('amount')
+        expense.date = request.POST.get('date')
+        expense.payment_method = request.POST.get('payment_method')
+        if 'receipt' in request.FILES:
+            expense.receipt = request.FILES['receipt']
+        expense.tax_deductible = request.POST.get('tax_deductible') == 'on'
+        expense.is_recurring = request.POST.get('is_recurring') == 'on'
+        expense.recurring_pattern = request.POST.get('recurring_pattern') if expense.is_recurring else None
+        expense.recurring_end_date = request.POST.get('recurring_end_date') if expense.is_recurring and request.POST.get('recurring_end_date') else None
+        expense.employee_name = request.POST.get('employee_name')
+        expense.notes = request.POST.get('notes')
+        expense.save()
+        messages.success(request, 'Expense updated successfully!')
+        return redirect('expense_list')
+    
+    return render(request, 'expenses/edit.html', {'expense': expense})
+
+
+@login_required
+def expense_delete(request, expense_id):
+    expense = get_object_or_404(Expense, id=expense_id, user=request.user)
+    if request.method == 'POST':
+        expense.delete()
+        messages.success(request, 'Expense deleted successfully!')
+        return redirect('expense_list')
+    
+    return render(request, 'expenses/delete.html', {'expense': expense})
 
 
 # API Views for Dashboard

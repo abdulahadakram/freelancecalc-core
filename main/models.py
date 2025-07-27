@@ -129,3 +129,54 @@ class MonthlyGoal(models.Model):
     class Meta:
         unique_together = ['user', 'year', 'month']
         ordering = ['-year', '-month']
+
+
+class Expense(models.Model):
+    EXPENSE_CATEGORIES = [
+        ('software', 'Software & Tools'),
+        ('equipment', 'Equipment'),
+        ('travel', 'Travel & Transportation'),
+        ('marketing', 'Marketing & Advertising'),
+        ('office', 'Office & Supplies'),
+        ('professional', 'Professional Development'),
+        ('insurance', 'Insurance & Legal'),
+        ('salary', 'Salary'),
+        ('miscellaneous', 'Miscellaneous'),
+    ]
+    
+    PAYMENT_METHODS = [
+        ('cash', 'Cash'),
+        ('bank', 'Bank Transfer'),
+        ('credit_card', 'Credit Card'),
+        ('debit_card', 'Debit Card'),
+        ('other', 'Other'),
+    ]
+    
+    RECURRING_PATTERNS = [
+        ('monthly', 'Monthly'),
+        ('quarterly', 'Quarterly'),
+        ('yearly', 'Yearly'),
+        ('custom', 'Custom'),
+    ]
+    
+    user = models.ForeignKey('User', on_delete=models.CASCADE)
+    category = models.CharField(max_length=20, choices=EXPENSE_CATEGORIES)
+    description = models.CharField(max_length=200)
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    date = models.DateField()
+    payment_method = models.CharField(max_length=20, choices=PAYMENT_METHODS, default='bank')
+    receipt = models.FileField(upload_to='expense_receipts/', blank=True, null=True)
+    tax_deductible = models.BooleanField(default=True)
+    is_recurring = models.BooleanField(default=False)
+    recurring_pattern = models.CharField(max_length=20, choices=RECURRING_PATTERNS, blank=True, null=True)
+    recurring_end_date = models.DateField(blank=True, null=True)
+    employee_name = models.CharField(max_length=100, blank=True, null=True)
+    notes = models.TextField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    def __str__(self):
+        return f"{self.description} - {self.amount}"
+    
+    class Meta:
+        ordering = ['-date', '-created_at']
