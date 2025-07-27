@@ -151,11 +151,6 @@ def dashboard(request):
     else:
         project_percentage = 100 if total_projects > 0 else 0
     
-    # Debug: Print project statuses
-    print(f"DEBUG: User {request.user.username} has {total_projects} projects:")
-    for project in Project.objects.filter(user=request.user):
-        print(f"  - {project.name}: {project.status}")
-    
     # Get recent payments
     recent_payments = Payment.objects.filter(project__user=request.user).order_by('-actual_date')[:5]
     
