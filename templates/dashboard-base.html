@@ -57,6 +57,12 @@
                                 <span class="hide-menu">Payments</span>
                             </a>
                         </li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link {% if request.resolver_match.url_name == 'expense_list' %}active{% endif %}" href="{% url 'expense_list' %}">
+                                <i class="ti ti-receipt-off"></i>
+                                <span class="hide-menu">Expenses</span>
+                            </a>
+                        </li>
                         <li class="nav-small-cap">
                             <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
                             <span class="hide-menu">Quick Actions</span>
@@ -83,6 +89,14 @@
                                     <i class="ti ti-receipt"></i>
                                 </span>
                                 <span class="hide-menu">Add Payment</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link {% if request.resolver_match.url_name == 'expense_create' %}active{% endif %}" href="{% url 'expense_create' %}" aria-expanded="false">
+                                <span>
+                                    <i class="ti ti-receipt-off"></i>
+                                </span>
+                                <span class="hide-menu">Add Expense</span>
                             </a>
                         </li>
                         <li class="nav-small-cap">
